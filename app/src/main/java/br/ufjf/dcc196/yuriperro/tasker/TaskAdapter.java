@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -14,7 +15,7 @@ import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private List<Task> tasks;
-    private OnTaskClickListener listener;
+    private OnSwitchChangeListener listener;
 
     public TaskAdapter(List<Task> tasks) {
         this.tasks = tasks;
@@ -28,6 +29,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             super(itemView);
             textViewTaskName = itemView.findViewById(R.id.textViewTaskName);
             switchTaskStatus = itemView.findViewById(R.id.switchTaskStatus);
+
+            switchTaskStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    listener.onSwitchChange(buttonView, isChecked, getAdapterPosition());
+                }
+            });
         }
     }
 
@@ -61,15 +69,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     }
 
-    public interface OnTaskClickListener {
-        void onTaskClick(View source, int position);
+    public interface OnSwitchChangeListener {
+        void onSwitchChange(CompoundButton button, boolean isChecked, int position);
     }
 
-    public OnTaskClickListener getTaskClickListener() {
+    public OnSwitchChangeListener getSwitchChangeListener() {
         return listener;
     }
 
-    public void setTaskClickListener(OnTaskClickListener listener) {
+    public void setSwitchChangeListener(OnSwitchChangeListener listener) {
         this.listener = listener;
     }
 
