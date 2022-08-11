@@ -44,6 +44,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="51dp"
         android:layout_marginRight="51dp"
+        android:onClick="navigateToListTasks"
         android:text="Entrar"
         app:backgroundTint="#FF5722"
         app:layout_constraintEnd_toEndOf="parent"
