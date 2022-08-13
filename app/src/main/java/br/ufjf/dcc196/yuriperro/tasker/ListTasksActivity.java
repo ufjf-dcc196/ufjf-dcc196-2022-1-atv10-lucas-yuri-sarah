@@ -7,36 +7,36 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.CompoundButton;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ListTasksActivity extends AppCompatActivity {
     RecyclerView recyclerTasks;
-    private ItemTouchHelper.SimpleCallback touchHelperCallback;
     TaskAdapter taskAdapter;
+    private ItemTouchHelper.SimpleCallback touchHelperCallback;
+
+    private AppDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_tasks);
+        db = AppDatabase.getInstance(getApplicationContext());
 
         this.initRecyclerView();
     }
 
     private void initRecyclerView(){
         recyclerTasks = findViewById(R.id.recyclerViewTasks);
-
-        // layout manager
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
         recyclerTasks.setLayoutManager(layoutManager);
 
         // task adapter
-        ArrayList<Task> tasks = new ArrayList<Task>();
-        tasks.add(new Task(1L,"Tarefa 1",false,null));
-        tasks.add(new Task(2L,"Tarefa 2",false,null));
-        tasks.add(new Task(3L,"Tarefa 3",true,null));
-
+        Long userId = 2L; // Receber como parametro ta tela de login
+        List<Task> tasks = db.taskDao().getAllByUserId(userId);
         taskAdapter = new TaskAdapter(tasks);
         recyclerTasks.setAdapter(taskAdapter);
 
@@ -44,7 +44,10 @@ public class ListTasksActivity extends AppCompatActivity {
         taskAdapter.setSwitchChangeListener(new TaskAdapter.OnSwitchChangeListener() {
             @Override
             public void onSwitchChange(CompoundButton button, boolean isChecked, int position) {
-                tasks.get(position).setStatus(isChecked);
+                Task taskToUpdate = tasks.get(position);
+                taskToUpdate.setStatus(isChecked);
+                db.taskDao().update(taskToUpdate);
+
                 if(!recyclerTasks.isComputingLayout()) {
                     taskAdapter.notifyItemChanged(position);
                 }
@@ -61,7 +64,10 @@ public class ListTasksActivity extends AppCompatActivity {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
+                Task taskToDelete = tasks.get(position);
                 tasks.remove(position);
+                db.taskDao().delete(taskToDelete);
+
                 taskAdapter.notifyItemRemoved(position);
             }
         };
@@ -69,5 +75,9 @@ public class ListTasksActivity extends AppCompatActivity {
 
 
 
+    }
+
+    public void createNewTask(View source){
+        db.taskDao().create(new Task("Nova tarefa",false,2L));
     }
 }
