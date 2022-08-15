@@ -68,6 +68,15 @@ public class ListTasksActivity extends AppCompatActivity {
                     taskAdapter.notifyItemChanged(position);
                 }
             }
+
+            @Override
+            public void onClickChange(View v, int adapterPosition) {
+                Task taskNameUpdate = tasks.get(adapterPosition);
+                updateTask(taskNameUpdate);
+                if(!recyclerTasks.isComputingLayout()) {
+                    taskAdapter.notifyItemChanged(adapterPosition);
+                }
+            }
         });
 
         // swipe handler
@@ -92,11 +101,6 @@ public class ListTasksActivity extends AppCompatActivity {
     }
 
     public void createNewTask(View source){
-        newTask();
-        //db.taskDao().create(new Task(textNewTask,false,loggedUser.getId()));
-    }
-
-    private void newTask () {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Nova Tarefa");
 
@@ -111,7 +115,7 @@ public class ListTasksActivity extends AppCompatActivity {
                 dialog.cancel();
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -119,4 +123,30 @@ public class ListTasksActivity extends AppCompatActivity {
         });
         builder.show();
     }
+
+    private void updateTask(Task task){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Editar Tarefa");
+
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT );
+        input.setHint(task.getName());
+        builder.setView(input);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                task.setName(input.getText().toString());
+                db.taskDao().update(task);
+                dialog.cancel();
+            }
+        });
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+    }
+
 }

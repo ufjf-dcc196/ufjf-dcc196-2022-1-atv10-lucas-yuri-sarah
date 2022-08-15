@@ -1,6 +1,7 @@
 package br.ufjf.dcc196.yuriperro.tasker;
 
 import android.content.Context;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             super(itemView);
             textViewTaskName = itemView.findViewById(R.id.textViewTaskName);
             switchTaskStatus = itemView.findViewById(R.id.switchTaskStatus);
+
+            textViewTaskName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onClickChange(v, getAdapterPosition());
+                }
+            });
+
 
             switchTaskStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -71,6 +80,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     public interface OnSwitchChangeListener {
         void onSwitchChange(CompoundButton button, boolean isChecked, int position);
+
+        void onClickChange(View v, int adapterPosition);
     }
 
     public OnSwitchChangeListener getSwitchChangeListener() {
