@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,8 @@ public class ListTasksActivity extends AppCompatActivity {
     TaskAdapter taskAdapter;
     private ItemTouchHelper.SimpleCallback touchHelperCallback;
 
+    private User loggedUser = null;
+
     private AppDatabase db;
 
     @Override
@@ -25,6 +28,14 @@ public class ListTasksActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_tasks);
         db = AppDatabase.getInstance(getApplicationContext());
+
+        // receive params
+        Bundle bundleExtras = getIntent().getExtras();
+        if(bundleExtras != null){
+            Long userId = Long.parseLong(bundleExtras.getString("userId"));
+
+            loggedUser = db.userDao().getById(userId);
+        }
 
         this.initRecyclerView();
     }
@@ -35,8 +46,7 @@ public class ListTasksActivity extends AppCompatActivity {
         recyclerTasks.setLayoutManager(layoutManager);
 
         // task adapter
-        Long userId = 2L; // Receber como parametro ta tela de login
-        List<Task> tasks = db.taskDao().getAllByUserId(userId);
+        List<Task> tasks = db.taskDao().getAllByUserId(loggedUser.getId());
         taskAdapter = new TaskAdapter(tasks);
         recyclerTasks.setAdapter(taskAdapter);
 
@@ -73,11 +83,9 @@ public class ListTasksActivity extends AppCompatActivity {
         };
         new ItemTouchHelper(touchHelperCallback).attachToRecyclerView(recyclerTasks);
 
-
-
     }
 
     public void createNewTask(View source){
-        db.taskDao().create(new Task("Nova tarefa",false,2L));
+        db.taskDao().create(new Task("Nova tarefa",false,loggedUser.getId()));
     }
 }
