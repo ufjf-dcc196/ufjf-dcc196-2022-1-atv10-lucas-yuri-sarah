@@ -38,7 +38,7 @@ public class RegisterUserActivity extends AppCompatActivity {
         Boolean result = hasBlankFields();
 
         if(result)  Toast.makeText(this, "Não podem haver campos em branco!", Toast.LENGTH_LONG).show();
-        else if( hasUser.getId() != null){
+        else if( hasUser != null){
             Toast.makeText(this, "Email já cadastrado!", Toast.LENGTH_LONG).show();
         } else {
             User user = new User(name.getText().toString(), email.getText().toString(), password.getText().toString());
