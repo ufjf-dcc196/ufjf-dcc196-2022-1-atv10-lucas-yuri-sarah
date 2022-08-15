@@ -93,7 +93,7 @@ public class ListTasksActivity extends AppCompatActivity {
 
     public void createNewTask(View source){
         newTask();
-        db.taskDao().create(new Task(textNewTask,false,loggedUser.getId()));
+        //db.taskDao().create(new Task(textNewTask,false,loggedUser.getId()));
     }
 
     private void newTask () {
@@ -102,12 +102,13 @@ public class ListTasksActivity extends AppCompatActivity {
 
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT );
+        input.setHint("Nome da tarefa");
         builder.setView(input);
-
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                textNewTask = input.getText().toString();
+                db.taskDao().create(new Task(input.getText().toString(),false,loggedUser.getId()));
+                dialog.cancel();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
