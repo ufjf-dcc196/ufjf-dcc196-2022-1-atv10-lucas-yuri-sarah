@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void handleButtonRegister(View view){
-        Intent intent = new Intent(MainActivity.this, ListTasksActivity.class);
+        Intent intent = new Intent(MainActivity.this, RegisterUserActivity.class);
         startActivity(intent);
     }
 

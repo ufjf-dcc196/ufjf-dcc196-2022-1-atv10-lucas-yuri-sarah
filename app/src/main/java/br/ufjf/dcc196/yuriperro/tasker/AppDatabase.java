@@ -14,7 +14,7 @@ public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase INSTANCE;
 
     public abstract TaskDao taskDao();
-
+    public abstract UserDao userDao();
 
     public static AppDatabase getInstance(Context ctx){
         if(INSTANCE == null){
