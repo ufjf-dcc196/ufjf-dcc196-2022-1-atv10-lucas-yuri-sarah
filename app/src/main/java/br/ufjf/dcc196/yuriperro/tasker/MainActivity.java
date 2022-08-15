@@ -17,6 +17,15 @@ public class MainActivity extends AppCompatActivity {
         db = AppDatabase.getInstance(getApplicationContext());
     }
 
+    public void handleButtonLogin(View view){
+
+    }
+
+    public void handleButtonRegister(View view){
+        Intent intent = new Intent(MainActivity.this, ListTasksActivity.class);
+        startActivity(intent);
+    }
+
     public void navigateToListTasks(View source){
         Intent intent = new Intent(MainActivity.this, ListTasksActivity.class);
         startActivity(intent);
