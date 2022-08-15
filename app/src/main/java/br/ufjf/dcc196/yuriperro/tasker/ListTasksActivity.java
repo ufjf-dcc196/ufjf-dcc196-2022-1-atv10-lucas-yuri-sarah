@@ -6,9 +6,13 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -22,6 +26,8 @@ public class ListTasksActivity extends AppCompatActivity {
     private User loggedUser = null;
 
     private AppDatabase db;
+
+    private String textNewTask = "Tarefa";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +92,30 @@ public class ListTasksActivity extends AppCompatActivity {
     }
 
     public void createNewTask(View source){
-        db.taskDao().create(new Task("Nova tarefa",false,loggedUser.getId()));
+        newTask();
+        db.taskDao().create(new Task(textNewTask,false,loggedUser.getId()));
+    }
+
+    private void newTask () {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Nova Tarefa");
+
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT );
+        builder.setView(input);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                textNewTask = input.getText().toString();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
     }
 }
