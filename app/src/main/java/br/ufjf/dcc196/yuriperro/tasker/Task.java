@@ -33,7 +33,6 @@ public class Task {
     public Task(String name,Boolean status,Long userId) {
         this.name = name;
         this.status = status;
-        this.id = id;
         this.userId = userId;
     }
 

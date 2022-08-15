@@ -9,6 +9,7 @@
         <entry key="app/src/main/res/layout/activity_list_tasks.xml" value="0.21" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.14444444444444443" />
         <entry key="app/src/main/res/layout/activity_register_user.xml" value="0.14444444444444443" />
+        <entry key="app/src/main/res/layout/dialog_task_item.xml" value="0.1546875" />
         <entry key="app/src/main/res/layout/layout_task_item.xml" value="0.33" />
       </map>
     </option>
