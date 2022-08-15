@@ -13,11 +13,14 @@ public interface UserDao {
     @Insert
     void create(User user);
 
-    @Query("SELECT * FROM task")
+    @Query("SELECT * FROM user")
     List<User> getAll();
 
-    @Query("SELECT * FROM task WHERE id=:id LIMIT 1")
+    @Query("SELECT * FROM user WHERE id=:id LIMIT 1")
     User getById(Long id);
+
+    @Query("SELECT * FROM user WHERE email=:email LIMIT 1")
+    User getByEmail(String email);
 
     @Update
     void update(User user);
