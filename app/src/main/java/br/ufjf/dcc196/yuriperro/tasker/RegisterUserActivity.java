@@ -49,4 +49,8 @@ public class RegisterUserActivity extends AppCompatActivity {
             finish();
         }
     }
+
+    public void handleBack(View view){
+        finish();
+    }
 }
