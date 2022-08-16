@@ -110,12 +110,7 @@ public class ListTasksActivity extends AppCompatActivity {
     public void createNewTask(View source){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Nova Tarefa");
-
-        final View customLayout
-                = getLayoutInflater()
-                .inflate(
-                        R.layout.layout_task_dialog,
-                        null);
+        final View customLayout = getLayoutInflater().inflate(R.layout.layout_task_dialog,null);
         builder.setView(customLayout);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
@@ -140,18 +135,13 @@ public class ListTasksActivity extends AppCompatActivity {
     private void updateTask(Task task, int position){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Editar Tarefa");
-
-
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT );
-        input.setHint("Nome da tarefa");
-        input.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        input.setText(task.getName());
-        builder.setView(input);
+        final View customLayout = getLayoutInflater().inflate(R.layout.layout_task_dialog,null);
+        builder.setView(customLayout);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                task.setName(input.getText().toString());
+                EditText editText = customLayout.findViewById(R.id.editText);
+                task.setName(editText.getText().toString());
                 tasks.set(position, task);
                 db.taskDao().update(task);
                 taskAdapter.notifyDataSetChanged();
