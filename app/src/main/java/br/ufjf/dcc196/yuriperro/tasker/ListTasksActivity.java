@@ -137,10 +137,12 @@ public class ListTasksActivity extends AppCompatActivity {
         builder.setTitle("Editar Tarefa");
         final View customLayout = getLayoutInflater().inflate(R.layout.layout_task_dialog,null);
         builder.setView(customLayout);
+        EditText editText = customLayout.findViewById(R.id.editText);
+        editText.setText(task.getName());
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                EditText editText = customLayout.findViewById(R.id.editText);
+
                 task.setName(editText.getText().toString());
                 tasks.set(position, task);
                 db.taskDao().update(task);
