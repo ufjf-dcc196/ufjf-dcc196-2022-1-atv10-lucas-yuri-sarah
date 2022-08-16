@@ -13,6 +13,7 @@ import android.text.InputType;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -20,6 +21,8 @@ import java.util.List;
 
 public class ListTasksActivity extends AppCompatActivity {
     RecyclerView recyclerTasks;
+    TextView textViewWelcome;
+
     TaskAdapter taskAdapter;
     private ItemTouchHelper.SimpleCallback touchHelperCallback;
     List<Task> tasks = new ArrayList<Task>();
@@ -27,8 +30,6 @@ public class ListTasksActivity extends AppCompatActivity {
     private User loggedUser = null;
 
     private AppDatabase db;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,9 @@ public class ListTasksActivity extends AppCompatActivity {
 
             loggedUser = db.userDao().getById(userId);
         }
+
+        textViewWelcome = findViewById(R.id.textViewWelcome);
+        textViewWelcome.setText("Bem-vindo " + loggedUser.getName()+ "!");
 
         this.initRecyclerView();
     }
@@ -157,4 +161,8 @@ public class ListTasksActivity extends AppCompatActivity {
         builder.show();
     }
 
+    public void logout(View source){
+        loggedUser = null;
+        finish();
+    }
 }
