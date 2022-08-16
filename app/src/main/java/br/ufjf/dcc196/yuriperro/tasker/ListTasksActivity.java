@@ -22,12 +22,13 @@ public class ListTasksActivity extends AppCompatActivity {
     RecyclerView recyclerTasks;
     TaskAdapter taskAdapter;
     private ItemTouchHelper.SimpleCallback touchHelperCallback;
+    List<Task> tasks = new ArrayList<Task>();
 
     private User loggedUser = null;
 
     private AppDatabase db;
 
-    private String textNewTask = "Tarefa";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,7 @@ public class ListTasksActivity extends AppCompatActivity {
         recyclerTasks.setLayoutManager(layoutManager);
 
         // task adapter
-        List<Task> tasks = db.taskDao().getAllByUserId(loggedUser.getId());
+        tasks = db.taskDao().getAllByUserId(loggedUser.getId());
         taskAdapter = new TaskAdapter(tasks);
         recyclerTasks.setAdapter(taskAdapter);
 
@@ -70,11 +71,12 @@ public class ListTasksActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onClickChange(View v, int adapterPosition) {
-                Task taskNameUpdate = tasks.get(adapterPosition);
-                updateTask(taskNameUpdate);
+            public void onClickChange(View v, int position) {
+                Task taskNameUpdate = tasks.get(position);
+                updateTask(taskNameUpdate, position);
+
                 if(!recyclerTasks.isComputingLayout()) {
-                    taskAdapter.notifyItemChanged(adapterPosition);
+                    taskAdapter.notifyItemChanged(position);
                 }
             }
         });
@@ -97,7 +99,6 @@ public class ListTasksActivity extends AppCompatActivity {
             }
         };
         new ItemTouchHelper(touchHelperCallback).attachToRecyclerView(recyclerTasks);
-
     }
 
     public void createNewTask(View source){
@@ -111,7 +112,11 @@ public class ListTasksActivity extends AppCompatActivity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                db.taskDao().create(new Task(input.getText().toString(),false,loggedUser.getId()));
+                Task newTask = new Task(input.getText().toString(),false,loggedUser.getId());
+                tasks.add(newTask);
+                db.taskDao().create(newTask);
+                taskAdapter.notifyDataSetChanged();
+
                 dialog.cancel();
             }
         });
@@ -124,7 +129,7 @@ public class ListTasksActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void updateTask(Task task){
+    private void updateTask(Task task, int position){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Editar Tarefa");
 
@@ -136,7 +141,10 @@ public class ListTasksActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 task.setName(input.getText().toString());
+                tasks.set(position, task);
                 db.taskDao().update(task);
+                taskAdapter.notifyDataSetChanged();
+
                 dialog.cancel();
             }
         });
