@@ -11,8 +11,10 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -109,18 +111,20 @@ public class ListTasksActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Nova Tarefa");
 
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT );
-        input.setHint("Nome da tarefa");
-        builder.setView(input);
+        final View customLayout
+                = getLayoutInflater()
+                .inflate(
+                        R.layout.layout_task_dialog,
+                        null);
+        builder.setView(customLayout);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Task newTask = new Task(input.getText().toString(),false,loggedUser.getId());
+                EditText editText = customLayout.findViewById(R.id.editText);
+                Task newTask = new Task(editText.getText().toString(),false,loggedUser.getId());
                 tasks.add(newTask);
                 db.taskDao().create(newTask);
                 taskAdapter.notifyDataSetChanged();
-
                 dialog.cancel();
             }
         });
@@ -137,9 +141,12 @@ public class ListTasksActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Editar Tarefa");
 
+
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT );
-        input.setHint(task.getName());
+        input.setHint("Nome da tarefa");
+        input.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        input.setText(task.getName());
         builder.setView(input);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
