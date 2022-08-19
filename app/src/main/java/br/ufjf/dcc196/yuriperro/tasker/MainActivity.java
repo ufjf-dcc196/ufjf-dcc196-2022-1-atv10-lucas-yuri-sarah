@@ -34,16 +34,13 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, ListTasksActivity.class);
             intent.putExtra("userId", hasUser.getId().toString());
             startActivity(intent);
+            email.setText("");
+            password.setText("");
         }
     }
 
     public void handleButtonRegister(View view){
         Intent intent = new Intent(MainActivity.this, RegisterUserActivity.class);
-        startActivity(intent);
-    }
-
-    public void navigateToListTasks(View source){
-        Intent intent = new Intent(MainActivity.this, ListTasksActivity.class);
         startActivity(intent);
     }
 }
